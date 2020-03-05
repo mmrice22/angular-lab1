@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Todo } from "../interfaces/todo";
+import { TodoService } from "../todo.service";
+import { NgForm } from "@angular/forms";
 
 @Component({
   selector: "app-todo",
@@ -8,16 +10,34 @@ import { Todo } from "../interfaces/todo";
 })
 export class TodoComponent implements OnInit {
   // properties
-  todoArr: Todo[] = [
-    { task: "wake up", completed: true },
-    { task: "chill with Isak", completed: false },
-    { task: "feed the zoo", completed: true },
-    { task: "go to class", completed: true },
-    { task: "walk the dog", completed: false },
-    { task: "climb some walls", completed: false }
-  ];
+  todoArr: Todo[] = [];
 
-  constructor() {}
+  constructor(private service: TodoService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getTable();
+  }
+
+  getTable() {
+    this.service.getTable().subscribe(response => {
+      // console.log(response);
+      this.todoArr = response;
+    });
+  }
+
+  deleteTask(id: number) {
+    this.service.deleteTask(id).subscribe(response => {
+      this.getTable();
+    });
+  }
+
+  addTask(form: NgForm) {
+    let newTodo = {
+      task: form.value.task,
+      completed: false
+    };
+    this.service.addTask(newTodo).subscribe(response => {
+      this.getTable();
+    });
+  }
 }

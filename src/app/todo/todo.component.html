@@ -12,12 +12,14 @@
           <p [ngClass]="{ completed: todo.completed }" class="task">
             {{ todo.task }}
           </p>
-          <button><i class="fas fa-times"></i></button>
+          <button (click)="deleteTask(todo.id)">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
       </li>
     </ol>
-    <form class="add-form">
-      <input type="text" value="Add your to-dossss" /> <br />
+    <form class="add-form" #addForm="ngForm" (ngSubmit)="addTask(addForm)">
+      <input type="text" placeholder="Add your to-dossss" name="task" ngModel />
       <button class="add">Add</button>
     </form>
   </section>
